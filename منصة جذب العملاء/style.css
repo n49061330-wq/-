@@ -1,0 +1,281 @@
+/* مظهر مخصص كحلي نيوني لمنصة مستكشف العملاء الذكي */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+:root {
+    --navy-deep: #070b19;
+    --navy-card: #0d1527;
+    --navy-light: #16223f;
+    --navy-border: #1e2e56;
+    --cyan-glow: #00f0ff;
+    --gold-glow: #ffc700;
+    --accent-blue: #2563eb;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--navy-deep);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+/* خلفية البوابة الحماسية */
+.portal-bg {
+    background: radial-gradient(circle at center, #0e1e38 0%, #070b19 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* تأثير الشبكة المستقبلية للبوابة */
+.portal-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center;
+    transform: perspective(500px) rotateX(60deg) translateY(-30%) translateZ(0);
+    transform-origin: top center;
+    animation: gridMove 20s linear infinite;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+@keyframes gridMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 1000px;
+    }
+}
+
+/* بوابة التوهج */
+.glow-portal-btn {
+    position: relative;
+    background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.2);
+    border: 1px solid var(--cyan-glow);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+}
+
+.glow-portal-btn:hover {
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.4);
+    transform: scale(1.05) translateY(-2px);
+    border-color: #ffffff;
+}
+
+/* نبضات الرادار للبحث */
+.radar-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.radar-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(0, 240, 255, 0.3);
+    border-radius: 50%;
+    animation: radarPulse 3s linear infinite;
+    opacity: 0;
+    box-sizing: border-box;
+}
+
+.radar-circle:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.radar-circle:nth-child(3) {
+    animation-delay: 2s;
+}
+
+.radar-scanner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(0, 240, 255, 0.15) 0%, transparent 40%, transparent 100%);
+    animation: radarScan 4s linear infinite;
+}
+
+.radar-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: var(--cyan-glow);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+@keyframes radarPulse {
+    0% {
+        transform: scale(0.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+@keyframes radarScan {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* تخصيص شريط التمرير */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--navy-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--navy-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-blue);
+}
+
+/* بطاقات لوحة التحكم المتوهجة */
+.dashboard-card {
+    background-color: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    border-color: rgba(0, 240, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 240, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+/* أزرار الحالات الخاصة بالعملاء */
+.status-badge {
+    transition: all 0.2s ease;
+}
+
+.status-badge:hover {
+    transform: scale(1.05);
+}
+
+/* أنيميشن الدخول والخروج للشاشات */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثير التوهج للنصوص */
+.neon-text-cyan {
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.neon-text-gold {
+    text-shadow: 0 0 10px rgba(255, 199, 0, 0.6), 0 0 20px rgba(255, 199, 0, 0.2);
+}
+
+/* التنسيق الخاص بالجدول التفاعلي */
+.custom-table tr {
+    transition: all 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+    background-color: rgba(22, 34, 63, 0.4);
+}
+
+/* تنسيقات العقد التفاعلية لمحاكي n8n */
+.node-active-green {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 5px rgba(34, 197, 94, 0.2);
+    transform: scale(1.05);
+}
+
+.node-active-blue {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), inset 0 0 5px rgba(59, 130, 246, 0.2);
+    transform: scale(1.05);
+}
+
+.node-active-amber {
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.4), inset 0 0 5px rgba(245, 158, 11, 0.2);
+    transform: scale(1.05);
+}
+
+.node-active-purple {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 5px rgba(168, 85, 247, 0.2);
+    transform: scale(1.05);
+}
+
+.node-active-emerald {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4), inset 0 0 5px rgba(16, 185, 129, 0.2);
+    transform: scale(1.05);
+}
+
+.line-active {
+    background-color: #00f0ff !important;
+    box-shadow: 0 0 8px #00f0ff;
+}
+
+/* بطاقات العملاء في وضع محرك جذب العملاء (Lead Cards) */
+.lead-engine-card {
+    background-color: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-top: 4px solid var(--accent-blue);
+    box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lead-engine-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+/* بطاقة متوهجة لتم الاتفاق */
+.lead-card-agreed {
+    border-color: var(--gold-glow) !important;
+    border-top: 4px solid var(--gold-glow) !important;
+    box-shadow: 0 4px 15px rgba(255, 199, 0, 0.1) !important;
+}
+
+.lead-card-agreed:hover {
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 199, 0, 0.2) !important;
+}
+
+

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مستكشف العملاء الذكي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            950: '#070b19',
+                            900: '#0d1527',
+                            800: '#16223f',
+                            700: '#1e2e56',
+                            600: '#2e457d',
+                        },
+                        cyan: {
+                            glow: '#00f0ff',
+                        },
+                        gold: {
+                            glow: '#ffc700',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-navy-950 text-slate-100 min-h-screen flex flex-col font-['Cairo']">
+
+    <!-- 1. شاشة البوابة الترحيبية الحماسية -->
+    <div id="portal-screen" class="portal-bg min-h-screen flex flex-col justify-center items-center p-6 text-center z-10">
+        <div class="max-w-3xl space-y-8 z-10 fade-in">
+            <!-- الشعار التفاعلي -->
+            <div class="relative inline-block">
+                <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-glow to-blue-600 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                <div class="relative bg-navy-900 px-8 py-8 rounded-full border border-navy-700 flex justify-center items-center w-32 h-32 mx-auto">
+                    <i class="fa-solid fa-radar text-cyan-glow text-5xl animate-pulse"></i>
+                </div>
+            </div>
+
+            <!-- العنوان الحماسي المتوهج -->
+            <div class="space-y-4">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">
+                    منصة <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow to-blue-400 neon-text-cyan">مستكشف العملاء</span> الذكي
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 font-medium max-w-xl mx-auto">
+                    شريكك الرقمي الذكي لاستكشاف واستهداف أدق العملاء المحتملين في المملكة العربية السعودية بلمسة زر واحدة 
+                </p>
+            </div>
+
+            <!-- البوابة والمحفز للدخول -->
+            <div class="py-4">
+                <button id="enter-portal-btn" class="glow-portal-btn text-white font-bold py-4 px-10 rounded-full text-xl flex items-center gap-3 mx-auto">
+                    <span>دخول بوابة الاستكشاف</span>
+                    <i class="fa-solid fa-circle-arrow-left text-cyan-glow animate-bounce"></i>
+                </button>
+            </div>
+
+            <!-- مميزات المنصة السريعة -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-10 border-t border-navy-800 text-right">
+                <div class="flex gap-4 items-start p-4 bg-navy-900/60 rounded-xl border border-navy-800">
+                    <div class="text-cyan-glow text-2xl mt-1"><i class="fa-solid fa-bolt"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-200">استكشاف غير محدود</h3>
+                        <p class="text-sm text-slate-400 mt-1">ابحث في أي مدينة سعودية، وعن أي نشاط تجاري دون قيود.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start p-4 bg-navy-900/60 rounded-xl border border-navy-800">
+                    <div class="text-gold-glow text-2xl mt-1"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-200">كتابة ذكية وتخصيص</h3>
+                        <p class="text-sm text-slate-400 mt-1">توليد رسائل تسويقية فريدة لكل عميل باستخدام نموذج Gemini AI.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start p-4 bg-navy-900/60 rounded-xl border border-navy-800">
+                    <div class="text-blue-400 text-2xl mt-1"><i class="fa-solid fa-diagram-project"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-200">ربط مباشر مع n8n</h3>
+                        <p class="text-sm text-slate-400 mt-1">أتمتة كاملة للبحث، وتجميع البيانات، والتحقق من أرقام الهواتف.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. الشاشة الرئيسية للوحة التحكم (مخفية افتراضياً) -->
+    <div id="app-screen" class="hidden flex-1 flex flex-col fade-in">
+        <!-- شريط التنقل العلوي -->
+        <header class="bg-navy-900 border-b border-navy-800 sticky top-0 z-40 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-navy-800 p-2 rounded-lg text-cyan-glow">
+                    <i class="fa-solid fa-satellite-dish text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wide">منصة مستكشف العملاء الذكي</h1>
+                    <p class="text-xs text-cyan-glow/80 flex items-center gap-1">
+                        <span class="inline-block w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+                        متصل ومستعد للعمل
+                    </p>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم العلوية -->
+            <div class="flex items-center gap-3">
+                <button id="open-settings-btn" class="bg-navy-800 hover:bg-navy-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border border-navy-700 transition">
+                    <i class="fa-solid fa-gears text-cyan-glow"></i>
+                    <span>إعدادات الربط (n8n / API)</span>
+                </button>
+                <button id="back-to-portal-btn" class="bg-navy-800/50 hover:bg-navy-800 text-slate-400 hover:text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border border-navy-800 transition">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>شاشة البوابة</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="flex-1 p-6 grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
+            
+            <!-- العمود الأيمن: لوحة التحكم بالبحث والمدخلات -->
+            <div class="xl:col-span-1 space-y-6">
+                <div class="dashboard-card p-6 rounded-2xl">
+                    <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2 pb-2 border-b border-navy-800">
+                        <i class="fa-solid fa-magnifying-glass text-cyan-glow"></i>
+                        <span>البحث والاستكشاف الذكي</span>
+                    </h2>
+
+                    <form id="search-form" class="space-y-5">
+                        <!-- اختيار النشاط -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-slate-300">النشاط / المجال التجاري</label>
+                            <div class="relative">
+                                <select id="activity-select" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-cyan-glow transition appearance-none">
+                                    <option value="مقاهي">☕ مقاهي وكافيهات</option>
+                                    <option value="مطاعم">🍔 مطاعم ومطابخ</option>
+                                    <option value="صالونات تجميل">💅 صالونات تجميل ومشاغل نسائية</option>
+                                    <option value="عيادات طبية">🩺 مجمعات طبية وعيادات</option>
+                                    <option value="شركات تقنية">💻 شركات تقنية وبرمجة</option>
+                                    <option value="مكاتب عقارية">🏢 مكاتب عقارية وتطوير عقاري</option>
+                                    <option value="نوادي رياضية">💪 أندية وصالات رياضية</option>
+                                    <option value="custom">✍️ نشاط مخصص...</option>
+                                </select>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                            <!-- حقل النشاط المخصص -->
+                            <input id="custom-activity-input" type="text" placeholder="اكتب النشاط المخصص هنا..." class="hidden w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 mt-2 text-slate-100 focus:outline-none focus:border-cyan-glow transition">
+                        </div>
+
+                        <!-- اختيار المدينة -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-slate-300">المنطقة أو المدينة</label>
+                            <div class="relative">
+                                <select id="city-select" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-cyan-glow transition appearance-none">
+                                    <option value="الرياض">🇸🇦 الرياض</option>
+                                    <option value="جدة">🇸🇦 جدة</option>
+                                    <option value="الدمام">🇸🇦 الدمام</option>
+                                    <option value="مكة المكرمة">🇸🇦 مكة المكرمة</option>
+                                    <option value="المدينة المنورة">🇸🇦 المدينة المنورة</option>
+                                    <option value="الخبر">🇸🇦 الخبر</option>
+                                    <option value="الجبيل">🇸🇦 الجبيل</option>
+                                    <option value="الهفوف">🇸🇦 الهفوف</option>
+                                    <option value="الطائف">🇸🇦 الطائف</option>
+                                    <option value="أبها">🇸🇦 أبها</option>
+                                    <option value="custom">✍️ مدينة مخصصة...</option>
+                                </select>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                            <!-- حقل المدينة المخصص -->
+                            <input id="custom-city-input" type="text" placeholder="اكتب المدينة المخصصة هنا..." class="hidden w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 mt-2 text-slate-100 focus:outline-none focus:border-cyan-glow transition">
+                        </div>
+
+                        <!-- نطاق البحث (الحد الأقصى) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm font-semibold text-slate-300">
+                                <span>الحد الأقصى للعملاء في البحث</span>
+                                <span id="limit-val" class="text-cyan-glow font-bold">10 عملاء</span>
+                            </div>
+                            <input id="lead-limit-range" type="range" min="1" max="50" value="10" class="w-full h-2 bg-navy-800 rounded-lg appearance-none cursor-pointer accent-cyan-glow">
+                            <p class="text-[10px] text-slate-500">نطاق الاستكشاف مفتوح، يمكنك زيادته حسب الرغبة وسعة حسابات API.</p>
+                        </div>
+
+                        <!-- تشغيل البحث التجريبي أو الحقيقي -->
+                        <div class="bg-navy-800/40 p-3 rounded-xl border border-navy-700 flex items-center justify-between">
+                            <label for="demo-mode-toggle" class="text-sm text-slate-300 font-semibold cursor-pointer">تشغيل الوضع التجريبي (Mock Search)</label>
+                            <input type="checkbox" id="demo-mode-toggle" checked class="w-4 h-4 rounded text-cyan-glow focus:ring-cyan-glow bg-navy-800 border-navy-700 cursor-pointer">
+                        </div>
+
+                        <!-- زر إطلاق البحث المضيء -->
+                        <button type="submit" id="start-search-btn" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-950 transition">
+                            <i class="fa-solid fa-paper-plane animate-pulse"></i>
+                            <span>إطلاق الاستكشاف الذكي</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- معلومات الربط وحالة الاتصال -->
+                <div class="dashboard-card p-4 rounded-2xl text-xs space-y-2 text-slate-400">
+                    <div class="flex justify-between items-center">
+                        <span>رابط الـ n8n Webhook:</span>
+                        <span id="webhook-status" class="text-amber-500">جاهز (محلي)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>مفتاح Google API:</span>
+                        <span id="google-api-status" class="text-slate-500">لم يتم الإدخال</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>مفتاح Gemini API:</span>
+                        <span id="gemini-api-status" class="text-slate-500">لم يتم الإدخال</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الأعمدة الثلاثة اليسرى: لوحة التحكم الإحصائية وجدول البيانات -->
+            <div class="xl:col-span-3 space-y-6">
+                
+                <!-- 1. شاشة جاري البحث (محاكي سير عمل n8n واللوحة البرمجية للمحرك) -->
+                <div id="searching-loader" class="hidden dashboard-card p-8 rounded-2xl flex flex-col justify-center items-center text-center space-y-6">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-glow"></span>
+                        </span>
+                        <h3 class="text-2xl font-bold text-white tracking-wide">جاري استكشاف العملاء عبر محرك n8n...</h3>
+                    </div>
+                    
+                    <!-- محاكي لوحة عقد n8n (n8n Workflow Execution Canvas) -->
+                    <div class="w-full overflow-x-auto py-6 flex items-center justify-center gap-2 relative select-none">
+                        <!-- Node 1: Webhook -->
+                        <div id="node-webhook" class="bg-navy-900 border border-navy-700 p-4 rounded-xl flex items-center gap-3 w-44 transition-all duration-300 shadow-md">
+                            <div class="bg-green-600/20 p-2 rounded text-green-400 text-lg flex items-center justify-center w-10 h-10"><i class="fa-solid fa-network-wired"></i></div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-500">العقدة 1</p>
+                                <p class="text-xs font-bold text-slate-200">Webhook Trigger</p>
+                            </div>
+                        </div>
+                        <div class="h-1 w-6 bg-navy-800 transition duration-300" id="line-1"></div>
+                        
+                        <!-- Node 2: Google Search -->
+                        <div id="node-search" class="bg-navy-900 border border-navy-700 p-4 rounded-xl flex items-center gap-3 w-44 transition-all duration-300 shadow-md">
+                            <div class="bg-blue-600/20 p-2 rounded text-blue-400 text-lg flex items-center justify-center w-10 h-10"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-500">العقدة 2</p>
+                                <p class="text-xs font-bold text-slate-200">Google Search API</p>
+                            </div>
+                        </div>
+                        <div class="h-1 w-6 bg-navy-800 transition duration-300" id="line-2"></div>
+                        
+                        <!-- Node 3: Extract Phones -->
+                        <div id="node-phones" class="bg-navy-900 border border-navy-700 p-4 rounded-xl flex items-center gap-3 w-44 transition-all duration-300 shadow-md">
+                            <div class="bg-amber-600/20 p-2 rounded text-amber-400 text-lg flex items-center justify-center w-10 h-10"><i class="fa-solid fa-phone"></i></div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-500">العقدة 3</p>
+                                <p class="text-xs font-bold text-slate-200">Extract Phones</p>
+                            </div>
+                        </div>
+                        <div class="h-1 w-6 bg-navy-800 transition duration-300" id="line-3"></div>
+                        
+                        <!-- Node 4: Gemini AI -->
+                        <div id="node-gemini" class="bg-navy-900 border border-navy-700 p-4 rounded-xl flex items-center gap-3 w-44 transition-all duration-300 shadow-md">
+                            <div class="bg-purple-600/20 p-2 rounded text-purple-400 text-lg flex items-center justify-center w-10 h-10"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-500">العقدة 4</p>
+                                <p class="text-xs font-bold text-slate-200">Gemini Writer</p>
+                            </div>
+                        </div>
+                        <div class="h-1 w-6 bg-navy-800 transition duration-300" id="line-4"></div>
+                        
+                        <!-- Node 5: Respond -->
+                        <div id="node-respond" class="bg-navy-900 border border-navy-700 p-4 rounded-xl flex items-center gap-3 w-44 transition-all duration-300 shadow-md">
+                            <div class="bg-emerald-600/20 p-2 rounded text-emerald-400 text-lg flex items-center justify-center w-10 h-10"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-500">العقدة 5</p>
+                                <p class="text-xs font-bold text-slate-200">Respond Webhook</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- شاشة الكونسول البرمجية للمحرك (Lead Engine Terminal) -->
+                    <div class="w-full max-w-3xl bg-black/90 border border-navy-700 rounded-xl p-4 text-right text-xs font-mono text-cyan-400 space-y-1.5 h-40 overflow-y-auto select-all shadow-inner" id="engine-terminal-log">
+                        <div class="text-slate-500">[03:15:00] -- تهيئة محرك الاستكشاف الذكي (Lead Engine) --</div>
+                    </div>
+                </div>
+
+                <!-- 2. لوحة الإحصائيات (Dashboard Stats & Charts) -->
+                <div id="stats-dashboard" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- كرت 1 -->
+                    <div class="dashboard-card p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">العملاء المكتشفين</span>
+                            <span id="stat-total" class="text-3xl font-extrabold text-white">0</span>
+                        </div>
+                        <div class="bg-blue-900/40 p-3 rounded-xl text-blue-400 text-xl border border-blue-800">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <!-- كرت 2 -->
+                    <div class="dashboard-card p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">تم التواصل معهم</span>
+                            <span id="stat-contacted" class="text-3xl font-extrabold text-amber-400">0</span>
+                        </div>
+                        <div class="bg-amber-900/40 p-3 rounded-xl text-amber-400 text-xl border border-amber-800">
+                            <i class="fa-solid fa-phone-volume"></i>
+                        </div>
+                    </div>
+                    <!-- كرت 3 -->
+                    <div class="dashboard-card p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">تم الاتفاق بنجاح</span>
+                            <span id="stat-agreed" class="text-3xl font-extrabold text-emerald-400">0</span>
+                        </div>
+                        <div class="bg-emerald-900/40 p-3 rounded-xl text-emerald-400 text-xl border border-emerald-800">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                    </div>
+                    <!-- كرت 4 -->
+                    <div class="dashboard-card p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">نسبة نجاح الاتفاق</span>
+                            <span id="stat-conversion" class="text-3xl font-extrabold text-cyan-glow">0%</span>
+                        </div>
+                        <div class="bg-cyan-900/40 p-3 rounded-xl text-cyan-glow text-xl border border-cyan-800">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. مساحة الرسوم البيانية وقسم النتائج -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- مخطط الحالات والأنشطة -->
+                    <div class="lg:col-span-1 dashboard-card p-5 rounded-2xl flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-cyan-glow"></i>
+                            <span>توزيع حالات العملاء</span>
+                        </h3>
+                        <div class="flex-1 flex items-center justify-center min-h-[180px]">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- مخطط المدن المكتشفة -->
+                    <div class="lg:col-span-2 dashboard-card p-5 rounded-2xl flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-cyan-glow"></i>
+                            <span>أكثر المدن التي تم العثور على عملاء بها</span>
+                        </h3>
+                        <div class="flex-1 flex items-center justify-center min-h-[180px]">
+                            <canvas id="cityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. تبويبات استعراض العملاء وإدارتهم -->
+                <div class="dashboard-card rounded-2xl overflow-hidden">
+                    <div class="bg-navy-900 border-b border-navy-800 flex flex-col lg:flex-row justify-between items-center px-6 py-2 gap-4">
+                        <div class="flex gap-4">
+                            <button id="tab-all-btn" class="border-b-2 border-cyan-glow text-cyan-glow px-4 py-3 font-semibold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-database"></i>
+                                <span>جميع العملاء المكتشفين</span>
+                            </button>
+                            <button id="tab-deals-btn" class="border-b-2 border-transparent text-slate-400 hover:text-slate-200 px-4 py-3 font-semibold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-star text-gold-glow"></i>
+                                <span>تم التواصل والاتفاق</span>
+                            </button>
+                        </div>
+
+                        <!-- أزرار تبديل العرض بين بطاقات المحرك والجدول -->
+                        <div class="flex items-center gap-1 bg-navy-800 p-1 rounded-xl border border-navy-700 text-xs font-semibold">
+                            <button id="view-cards-btn" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                                <i class="fa-solid fa-grip"></i>
+                                <span>بطاقات المحرك (Engine Cards)</span>
+                            </button>
+                            <button id="view-table-btn" class="text-slate-400 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                                <i class="fa-solid fa-table-list"></i>
+                                <span>الجدول القياسي</span>
+                            </button>
+                        </div>
+
+                        <!-- تصدير النتائج -->
+                        <button id="export-csv-btn" class="bg-navy-800 hover:bg-navy-700 text-xs font-semibold px-4 py-2 rounded-lg border border-navy-700 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-file-excel text-emerald-400"></i>
+                            <span>تصدير CSV</span>
+                        </button>
+                    </div>
+
+                    <!-- شريط فلترة وبحث داخلي -->
+                    <div class="p-4 bg-navy-900/50 border-b border-navy-800 flex flex-col sm:flex-row gap-4 justify-between items-center">
+                        <div class="relative w-full sm:max-w-xs">
+                            <input id="table-search-input" type="text" placeholder="ابحث بالاسم أو الموقع..." class="w-full bg-navy-800 border border-navy-700 rounded-xl pl-4 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow transition">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 items-center text-xs text-slate-400">
+                            <span>فلترة الحالة:</span>
+                            <select id="filter-status-select" class="bg-navy-800 border border-navy-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-cyan-glow">
+                                <option value="all">الكل</option>
+                                <option value="مكتشف">مكتشف</option>
+                                <option value="تم التواصل">تم التواصل</option>
+                                <option value="تم الاتفاق">تم الاتفاق</option>
+                                <option value="غير مهتم">غير مهتم</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- شبكة بطاقات العملاء (Lead Engine Cards Grid) -->
+                    <div id="leads-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 min-h-[300px]">
+                        <!-- سيتم تعبئتها ديناميكياً بواسطة JavaScript -->
+                    </div>
+
+                    <!-- جدول العملاء (مخفي افتراضياً) -->
+                    <div id="leads-table-container" class="hidden overflow-x-auto min-h-[300px]">
+                        <table class="w-full custom-table text-right text-sm">
+                            <thead class="bg-navy-900/70 border-b border-navy-800 text-slate-300 font-semibold">
+                                <tr>
+                                    <th class="p-4">الاسم والنشاط</th>
+                                    <th class="p-4">المدينة</th>
+                                    <th class="p-4">الهاتف والمعلومات</th>
+                                    <th class="p-4">الرسالة التسويقية (Gemini)</th>
+                                    <th class="p-4">الحالة</th>
+                                    <th class="p-4 text-left">التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leads-table-body" class="divide-y divide-navy-800/60">
+                                <!-- سيتم تعبئة البيانات تلقائياً بواسطة JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- حالة جدول فارغ -->
+                    <div id="empty-table-state" class="py-16 text-center space-y-4">
+                        <i class="fa-solid fa-circle-nodes text-navy-600 text-6xl animate-pulse"></i>
+                        <div class="space-y-1">
+                            <p class="text-slate-400 font-medium">محرك استكشاف العملاء في وضع الاستعداد</p>
+                            <p class="text-xs text-slate-600">اختر النشاط والمدينة واضغط على زر الاستكشاف للبدء بتشغيل المحرك.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 3. نافذة الإعدادات المنبثقة (Settings Modal) -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+        <div class="bg-navy-900 border border-navy-700 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] fade-in">
+            <div class="p-6 border-b border-navy-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-gears text-cyan-glow"></i>
+                    <span>إعدادات الاتصال والمفاتيح</span>
+                </h3>
+                <button class="close-settings text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-4">
+                <div class="bg-amber-950/40 border border-amber-900/60 p-4 rounded-xl text-amber-300 text-xs leading-relaxed space-y-2">
+                    <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-info"></i> تنبيه الأمان:</p>
+                    <p>يتم تخزين المفاتيح محلياً فقط في متصفحك (`localStorage`). لا يتم حفظها على أي خادم خارجي، مما يضمن أمان وخصوصية بياناتك ومفاتيح الـ API الخاصة بك.</p>
+                </div>
+
+                <!-- Webhook n8n URL -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-300">رابط Webhook n8n (POST)</label>
+                    <input id="setting-webhook-url" type="text" placeholder="https://your-n8n-instance/webhook/lead-hunter" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow">
+                </div>
+
+                <!-- Google Custom Search API Key -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-300">Google Custom Search API Key</label>
+                    <input id="setting-google-key" type="password" placeholder="AIzaSy..." class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow">
+                </div>
+
+                <!-- Google CX ID -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-300">Google Search Engine ID (CX)</label>
+                    <input id="setting-google-cx" type="text" placeholder="e.g. 8b123456789abcdef" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow">
+                </div>
+
+                <!-- Gemini API Key -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-300">Gemini API Key</label>
+                    <input id="setting-gemini-key" type="password" placeholder="AIzaSy..." class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow">
+                </div>
+
+                <!-- Prompt template for Gemini -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-300">قالب توجيه الرسالة التسويقية لـ Gemini</label>
+                    <textarea id="setting-prompt" rows="4" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow" placeholder="اكتب القالب هنا..."></textarea>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-navy-800 bg-navy-950 flex justify-end gap-3">
+                <button class="close-settings bg-navy-800 hover:bg-navy-700 text-slate-300 px-5 py-2.5 rounded-xl font-bold transition text-sm">إلغاء</button>
+                <button id="save-settings-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2.5 rounded-xl font-bold transition text-sm">حفظ التغييرات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. نافذة تفاصيل العميل والملاحظات (Details Modal) -->
+    <div id="details-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+        <div class="bg-navy-900 border border-navy-700 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col fade-in">
+            <div class="p-6 border-b border-navy-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-address-card text-cyan-glow"></i>
+                    <span>تفاصيل العميل المحتمل والمتابعة</span>
+                </h3>
+                <button class="close-details text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <div>
+                    <h4 id="detail-name" class="text-xl font-bold text-cyan-glow">اسم الشركة الافتراضي</h4>
+                    <p id="detail-activity-city" class="text-xs text-slate-400 mt-1">النشاط - المدينة</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-navy-850 p-3 rounded-xl border border-navy-800">
+                        <span class="text-[10px] text-slate-500 block">رقم الهاتف</span>
+                        <span id="detail-phone" class="text-sm font-bold text-slate-200">05XXXXXXXX</span>
+                    </div>
+                    <div class="bg-navy-850 p-3 rounded-xl border border-navy-800">
+                        <span class="text-[10px] text-slate-500 block">الموقع الإلكتروني</span>
+                        <a id="detail-website" href="#" target="_blank" class="text-sm font-bold text-blue-400 hover:underline">زيارة الرابط</a>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-slate-400">الرسالة التسويقية المقترحة من Gemini</label>
+                    <div id="detail-message" class="bg-navy-950 p-4 rounded-xl border border-navy-800 text-sm leading-relaxed text-slate-300 max-h-[150px] overflow-y-auto whitespace-pre-wrap">
+                        لا توجد رسالة.
+                    </div>
+                </div>
+
+                <!-- ملاحظات المتابعة -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-slate-400 flex justify-between items-center">
+                        <span>ملاحظات المتابعة وسجل التواصل</span>
+                        <span class="text-[10px] text-amber-500 font-normal">تتحفظ الملاحظات تلقائياً</span>
+                    </label>
+                    <textarea id="detail-notes" rows="3" placeholder="سجل هنا الاتفاق، موعد الاتصال، متطلباتهم، إلخ..." class="w-full bg-navy-800 border border-navy-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-cyan-glow"></textarea>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-navy-800 bg-navy-950 flex justify-between items-center">
+                <button id="delete-lead-btn" class="bg-red-900/40 hover:bg-red-900/60 text-red-300 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-800">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>حذف العميل</span>
+                </button>
+                <div class="flex gap-2">
+                    <button class="close-details bg-navy-800 hover:bg-navy-700 text-slate-300 px-5 py-2 rounded-xl font-bold transition text-sm">إغلاق</button>
+                    <button id="save-lead-details-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2 rounded-xl font-bold transition text-sm">حفظ الملاحظات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-navy-950 border-t border-navy-900 py-6 text-center text-xs text-slate-600 mt-auto">
+        <p>© 2026 منصة مستكشف العملاء الذكي للمملكة العربية السعودية. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

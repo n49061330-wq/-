@@ -1,0 +1,208 @@
+{
+  "name": "AI Saudi Lead Hunter (Plug-and-Play)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-generation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        240
+      ],
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "sendQueryParameters": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{ $('Webhook Trigger').item.json.body.google_search_api_key }}"
+            },
+            {
+              "name": "cx",
+              "value": "={{ $('Webhook Trigger').item.json.body.google_search_cx }}"
+            },
+            {
+              "name": "q",
+              "value": "={{ $('Webhook Trigger').item.json.body.keyword }} في {{ $('Webhook Trigger').item.json.body.city }} السعودية"
+            },
+            {
+              "name": "num",
+              "value": "={{ $('Webhook Trigger').item.json.body.lead_limit }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        300,
+        240
+      ],
+      "id": "google-search-api",
+      "name": "Google Search API"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        240
+      ],
+      "id": "split-search-items",
+      "name": "Split Search Items"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const text = ($json.title || '') + ' ' + ($json.snippet || '');\n// Extract Saudi phone numbers using regex\nconst match = text.match(/(?:\\+966|00966|0)?5[0-9]{8}\\b|(?:\\+966|00966|0)1[0-9]{7}\\b|9200[0-9]{5}\\b|800[0-9]{6,8}\\b/);\n$json.phone = match ? match[0] : 'غير متوفر';\nreturn $json;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        240
+      ],
+      "id": "extract-phone-numbers",
+      "name": "Extract Phone Numbers"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{ $('Webhook Trigger').item.json.body.gemini_api_key }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"contents\": [{\"parts\": [{\"text\": \"اكتب رسالة تسويقية مخصصة باللغة العربية موجهة للشركة التالية:\\nالاسم: {{ $json.title }}\\nالمدينة: {{ $('Webhook Trigger').item.json.body.city }}\\nالرابط: {{ $json.link }}\\nالوصف: {{ $json.snippet }}\\n\\nحسب القالب والتوجيهات المرفقة:\\n{{ $('Webhook Trigger').item.json.body.prompt_template }}\"}]}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        900,
+        240
+      ],
+      "id": "gemini-ai-writer",
+      "name": "Gemini AI Writer"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// استخراج رسالة Gemini من الاستجابة\ntry {\n  const message = $json.candidates[0].content.parts[0].text || 'رسالة مخصصة';\n  $json.geminiMessage = message;\n} catch (error) {\n  $json.geminiMessage = 'رسالة تسويقية مخصصة';\n}\nreturn $json;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        240
+      ],
+      "id": "process-gemini-response",
+      "name": "Process Gemini Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"leads\": [\n    {{ $input.all().map(item => `{\n      \"name\": \"${item.json.title.replace(/\"/g, '\\\\\"')}\",\n      \"phone\": \"${item.json.phone}\",\n      \"location\": \"${$('Webhook Trigger').item.json.body.city}\",\n      \"website\": \"${item.json.link}\",\n      \"message\": \"${(item.json.geminiMessage || 'رسالة مخصصة').replace(/\\n/g, ' ').replace(/\"/g, '\\\\\"')}\"\n    }`).join(',') }}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        240
+      ],
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Search API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Search API": {
+      "main": [
+        [
+          {
+            "node": "Split Search Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Search Items": {
+      "main": [
+        [
+          {
+            "node": "Extract Phone Numbers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Phone Numbers": {
+      "main": [
+        [
+          {
+            "node": "Gemini AI Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini AI Writer": {
+      "main": [
+        [
+          {
+            "node": "Process Gemini Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Gemini Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+  "id": "lead-hunter-workflow-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

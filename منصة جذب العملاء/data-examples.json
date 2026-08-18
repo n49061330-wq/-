@@ -1,0 +1,205 @@
+{
+  "description": "ملف نموذج البيانات - Lead Hunter Platform",
+  "version": "2.0",
+  "notes": "هذا الملف يحتوي على نماذج لطلبات واستجابات الـ API",
+  
+  "webhook_request_example": {
+    "description": "مثال على طلب من التطبيق إلى N8N",
+    "method": "POST",
+    "url": "https://your-n8n-instance.cloud/webhook/lead-generation",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "google_search_api_key": "AIzaSyD_...",
+      "google_search_cx": "12345678901234567890:abc...",
+      "gemini_api_key": "AIzaSyD_...",
+      "prompt_template": "اكتب رسالة تسويقية مخصصة باللغة العربية...",
+      "city": "الرياض",
+      "keyword": "مطاعم",
+      "lead_limit": 5
+    }
+  },
+
+  "webhook_response_example": {
+    "description": "مثال على استجابة من N8N إلى التطبيق",
+    "status_code": 200,
+    "body": {
+      "leads": [
+        {
+          "name": "مطعم شواية الخليج",
+          "phone": "0501234567",
+          "location": "الرياض",
+          "website": "https://www.example.com",
+          "message": "السلام عليكم فريق مطعم شواية الخليج، نقدر ريادتكم في مجال المطاعم بمدينة الرياض..."
+        },
+        {
+          "name": "مطعم لوسين الأرمني",
+          "phone": "0509876543",
+          "location": "الرياض",
+          "website": "https://www.example.com",
+          "message": "مرحباً، لاحظنا شعبية مطعم لوسين الأرمني الكبيرة في مدينة الرياض..."
+        },
+        {
+          "name": "مطعم بيتزا إيطالية",
+          "phone": "غير متوفر",
+          "location": "الرياض",
+          "website": "https://www.example.com",
+          "message": "أهلاً بكم فريق مطعم بيتزا إيطالية، نقدر ريادتكم في مجال المطاعم..."
+        }
+      ]
+    }
+  },
+
+  "google_search_response_example": {
+    "description": "مثال على استجابة Google Search API",
+    "status_code": 200,
+    "body": {
+      "kind": "customsearch#search",
+      "url": {
+        "type": "application/json",
+        "template": "https://www.googleapis.com/customsearch/v1?q={searchTerms}&num={count?}&start={startIndex?}&lr={language?}&safe={safe?}&cX={cx?}&sort={sort?}&filter={filter?}&gl={gl?}&cr={cr?}&googlehost={googlehost?}&c2coff={c2coff?}&hq={hq?}&hl={hl?}&siteSearch={siteSearch?}&siteSearchFilter={siteSearchFilter?}&exactTerms={exactTerms?}&excludeTerms={excludeTerms?}&rights={rights?}&imgType={imgType?}&imgSize={imgSize?}&imgColorType={imgColorType?}&imgDominantColor={imgDominantColor?}&relatedSite={relatedSite?}&dateRestrict={dateRestrict?}&numPages={numPages?}&orTerms={orTerms?}&fileType={fileType?}&searchType={searchType?}"
+      },
+      "items": [
+        {
+          "kind": "customsearch#result",
+          "title": "مطعم شواية الخليج",
+          "htmlTitle": "مطعم <b>شواية الخليج</b>",
+          "link": "https://www.example.com/sharawa-khalij",
+          "displayLink": "example.com",
+          "snippet": "مطعم متخصص في الشواء التقليدي والطعام السعودي الأصيل. يقدم لحوم عالية الجودة مشوية حسب الطلب. رقم الهاتف: 0501234567",
+          "htmlSnippet": "مطعم متخصص في الشواء التقليدي والطعام السعودي الأصيل. يقدم لحوم عالية الجودة مشوية حسب الطلب. رقم الهاتف: <b>0501234567</b>"
+        }
+      ]
+    }
+  },
+
+  "gemini_response_example": {
+    "description": "مثال على استجابة Gemini API",
+    "status_code": 200,
+    "body": {
+      "candidates": [
+        {
+          "content": {
+            "parts": [
+              {
+                "text": "السلام عليكم فريق مطعم شواية الخليج,\n\nنهنئكم على خدمات مطعمكم الممتازة والمشهورة في مدينة الرياض. في منصتنا، نقدم لكم نظام أتمتة متقدم لتلقي الطلبات وإدارة حسابات التواصل بشكل آلي بالكامل، مما يوفر لكم أكثر من 35% من كلفة التشغيل وزيادة مبيعاتكم.\n\nيسعدنا ترتيب موعد سريع للاتصال الهاتفي غداً لمناقشة التفاصيل والعرض المتكامل!"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  "local_storage_example": {
+    "description": "مثال على بيانات LocalStorage",
+    "smart_explorer_leads": [
+      {
+        "id": "lead_1234567890123_456",
+        "name": "مطعم شواية الخليج",
+        "phone": "0501234567",
+        "location": "الرياض",
+        "activity": "مطاعم",
+        "website": "https://www.example.com",
+        "message": "السلام عليكم فريق مطعم شواية الخليج...",
+        "status": "مكتشف",
+        "notes": "الموقع في وسط الرياض، شهرة عالية",
+        "createdAt": "2026-08-18T12:34:56.000Z"
+      }
+    ],
+    "smart_explorer_settings": {
+      "webhookUrl": "https://nada07.app.n8n.cloud/webhook/lead-generation",
+      "googleKey": "AIzaSyD_...",
+      "googleCx": "12345678901234567890:abc...",
+      "geminiKey": "AIzaSyD_...",
+      "promptTemplate": "اكتب رسالة تسويقية مخصصة..."
+    }
+  },
+
+  "lead_object_structure": {
+    "description": "البنية المعيارية لكل عميل",
+    "example": {
+      "id": "lead_<timestamp>_<random>",
+      "name": "اسم الشركة",
+      "phone": "0501234567 أو 'غير متوفر'",
+      "location": "اسم المدينة",
+      "activity": "نوع النشاط (مطاعم، مقاهي، إلخ)",
+      "website": "https://website.com أو '#'",
+      "message": "الرسالة التسويقية المخصصة",
+      "status": "مكتشف | تم التواصل | تم الاتفاق | غير مهتم",
+      "notes": "ملاحظات اختيارية من المستخدم",
+      "createdAt": "ISO 8601 timestamp"
+    }
+  },
+
+  "error_responses": {
+    "description": "أمثلة على رسائل الخطأ المتوقعة",
+    "webhook_timeout": {
+      "error": "Request timeout",
+      "message": "The webhook took longer than expected to respond"
+    },
+    "invalid_api_key": {
+      "error": "Invalid API Key",
+      "message": "Google API key is invalid or expired"
+    },
+    "gemini_error": {
+      "error": "Gemini API Error",
+      "message": "Failed to generate message. Check Gemini API key and quota."
+    },
+    "malformed_response": {
+      "error": "Invalid Response",
+      "message": "Response does not contain required 'leads' array"
+    }
+  },
+
+  "test_scenarios": {
+    "scenario_1_demo_mode": {
+      "name": "اختبار وضع التجريب",
+      "steps": [
+        "1. فعّل 'وضع التجريب'",
+        "2. اختر نشاط: 'مطاعم'",
+        "3. اختر مدينة: 'الرياض'",
+        "4. اضغط 'بدء البحث'",
+        "5. يجب أن تظهر بيانات تجريبية بعد 2.5 ثانية"
+      ],
+      "expected_result": "✅ ظهور جدول بـ 10 عملاء تجريبيين"
+    },
+    "scenario_2_real_search": {
+      "name": "اختبار البحث الحقيقي",
+      "requirements": [
+        "✓ Google API Key صحيح",
+        "✓ Google CX ID صحيح",
+        "✓ Gemini API Key صحيح",
+        "✓ N8N Webhook URL صحيح",
+        "✓ N8N Workflow مفعل"
+      ],
+      "steps": [
+        "1. أدخل جميع المفاتيح في الإعدادات",
+        "2. أغلق 'وضع التجريب'",
+        "3. اختر نشاط ومدينة",
+        "4. اضغط 'بدء البحث'",
+        "5. انتظر 10-30 ثانية"
+      ],
+      "expected_result": "✅ ظهور نتائج حقيقية من Google مع رسائل Gemini"
+    },
+    "scenario_3_whatsapp_send": {
+      "name": "اختبار إرسال رسالة واتساب",
+      "steps": [
+        "1. ابحث عن عملاء",
+        "2. اضغط على زر 'مراسلة' الأخضر",
+        "3. يجب فتح واتساب بالرسالة المخصصة"
+      ],
+      "expected_result": "✅ فتح واتساب بالرسالة والرقم المعد"
+    },
+    "scenario_4_export_csv": {
+      "name": "اختبار تصدير CSV",
+      "steps": [
+        "1. ابحث عن عملاء",
+        "2. اضغط على 'تصدير CSV'",
+        "3. يجب تحميل ملف CSV"
+      ],
+      "expected_result": "✅ تحميل ملف CSV بصيغة UTF-8 مع BOM"
+    }
+  }
+}
